@@ -18,27 +18,33 @@ const initialState = {
 const movieReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'POPULAR': {
+      const oldData = state.popular;
+      const newData = [...oldData, ...action.payload];
       return {
         ...state,
-        popular: action.payload,
+        popular: newData,
         totalPagePopular: action.totalPage,
         currentPagePopular: action.page,
       };
     }
     case 'NOW_PLAYING': {
+      const oldData = state.nowPlaying;
+      const newData = [...oldData, ...action.payload];
       return {
         ...state,
-        nowPlaying: action.payload,
+        nowPlaying: newData,
         totalPageNowPlaying: action.totalPage,
         currentPageNowPlaying: action.page,
       };
     }
     case 'SEARCH': {
+      const oldData = state.search;
+      const newData = [...oldData, ...action.payload];
       return {
         ...state,
-        search: action.payload,
+        search: action.page === 1 ? action.payload : newData,
         totalPageSearch: action.totalPage,
-        currentPageSeatotalPageSearch: action.page,
+        currentPageSearch: action.page,
         keyword: action.keyword,
       };
     }

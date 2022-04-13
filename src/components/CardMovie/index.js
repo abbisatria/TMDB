@@ -7,7 +7,9 @@ const CardMovie = props => {
     <View style={styles.product}>
       <Image
         source={{
-          uri: `https://image.tmdb.org/t/p/w500${props.item.poster_path}`,
+          uri: props.item.poster_path
+            ? `https://image.tmdb.org/t/p/w500${props.item.poster_path}`
+            : 'https://archive.ebrschools.org/wp-content/themes/ebr/img/nofound.png',
         }}
         style={styles.image}
       />

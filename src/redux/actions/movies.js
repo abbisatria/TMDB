@@ -101,30 +101,24 @@ export const video = id => {
   };
 };
 
-export const search = movie => {
+export const search = (movie, page) => {
   return async dispatch => {
     try {
       dispatch({
         type: 'SET_MOVIE_MESSAGE',
         payload: '',
       });
-      dispatch({
-        type: 'SET_LOADING',
-        payload: true,
-      });
       const response = await http().get(
-        `search/movie?api_key=${API_KEY}&language=en-US&query=${movie}&page=1&include_adult=false`,
+        `search/movie?api_key=${API_KEY}&language=en-US&query=${movie}&page=${
+          page || 1
+        }&include_adult=false`,
       );
       dispatch({
         type: 'SEARCH',
         payload: response.data.results,
         page: response.data.page,
-        totalPage: response.data.totalPage,
+        totalPage: response.data.total_pages,
         keyword: movie,
-      });
-      dispatch({
-        type: 'SET_LOADING',
-        payload: false,
       });
     } catch (err) {
       const {errors} = err.response.data;

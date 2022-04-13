@@ -27,15 +27,19 @@ const Detail = () => {
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
       <ImageBackground
         source={{
-          uri: `https://image.tmdb.org/t/p/w500${movie.detail.backdrop_path}`,
+          uri: movie.detail.backdrop_path
+            ? `https://image.tmdb.org/t/p/w500${movie.detail.backdrop_path}`
+            : 'https://archive.ebrschools.org/wp-content/themes/ebr/img/nofound.png',
         }}
         style={styles.banner}>
-        <Image
-          source={{
-            uri: `https://image.tmdb.org/t/p/w500${movie.detail.poster_path}`,
-          }}
-          style={styles.image}
-        />
+        {movie.detail.poster_path && (
+          <Image
+            source={{
+              uri: `https://image.tmdb.org/t/p/w500${movie.detail.poster_path}`,
+            }}
+            style={styles.image}
+          />
+        )}
       </ImageBackground>
       <Text style={styles.title}>{movie.detail.original_title}</Text>
       <View style={styles.row}>
@@ -43,7 +47,7 @@ const Detail = () => {
           <ProgressCircle
             percent={movie.detail.vote_average * 10}
             radius={20}
-            borderWidth={8}
+            borderWidth={7}
             color="#FF7314"
             shadowColor="#999"
             bgColor="#fff">

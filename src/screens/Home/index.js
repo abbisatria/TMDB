@@ -40,16 +40,18 @@ const Home = props => {
 
   const searching = async () => {
     if (keyword !== '') {
-      await dispatch(search(keyword));
+      dispatch(loading(true));
+      await dispatch(search(keyword, 1));
       setKeyword('');
+      dispatch(loading(false));
       props.navigation.navigate('Search');
     }
   };
 
   const fetchMovie = async () => {
     dispatch(loading(true));
-    await dispatch(popular());
-    await dispatch(nowPlaying());
+    await dispatch(popular(movie.currentPagePopular));
+    await dispatch(nowPlaying(movie.currentPageNowPlaying));
     dispatch(loading(false));
   };
 
@@ -57,6 +59,18 @@ const Home = props => {
     fetchMovie();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const nextPopular = async () => {
+    if (movie.currentPagePopular < movie.totalPagePopular) {
+      await dispatch(popular(movie.currentPagePopular + 1));
+    }
+  };
+
+  const nextNowPlaying = async () => {
+    if (movie.currentPageNowPlaying < movie.totalPageNowPlaying) {
+      await dispatch(nowPlaying(movie.currentPageNowPlaying + 1));
+    }
+  };
 
   return movie.loading ? (
     <Loading />
@@ -93,7 +107,9 @@ const Home = props => {
                 <CardMovie item={item} />
               </TouchableOpacity>
             )}
-            keyExtractor={item => item.id}
+            keyExtractor={(item, idx) => idx}
+            onEndReached={nextPopular}
+            onEndReachedThreshold={0.5}
           />
         )}
         <Text style={styles.title}>Now Playing</Text>
@@ -109,7 +125,9 @@ const Home = props => {
                 <CardMovie item={item} />
               </TouchableOpacity>
             )}
-            keyExtractor={item => item.id}
+            keyExtractor={(item, idx) => idx}
+            onEndReached={nextNowPlaying}
+            onEndReachedThreshold={0.5}
           />
         )}
       </View>

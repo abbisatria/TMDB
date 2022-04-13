@@ -30,11 +30,20 @@ const Search = props => {
 
   const searching = async () => {
     if (keyword !== '') {
-      await dispatch(search(keyword));
+      dispatch(loading(true));
+      await dispatch(search(keyword, 1));
       setKeyword('');
+      dispatch(loading(false));
       props.navigation.navigate('Search');
     }
   };
+
+  const nextSearch = async () => {
+    if (movie.currentPageSearch < movie.totalPageSearch) {
+      await dispatch(search(movie.keyword, movie.currentPageSearch + 1));
+    }
+  };
+
   return movie.loading ? (
     <Loading />
   ) : (
@@ -63,7 +72,9 @@ const Search = props => {
               <CardMovie item={item} />
             </TouchableOpacity>
           )}
-          keyExtractor={item => item.id}
+          keyExtractor={(item, idx) => idx}
+          onEndReached={nextSearch}
+          onEndReachedThreshold={0.5}
         />
       ) : (
         <Text>{movie.keyword} Not Found</Text>
